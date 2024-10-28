@@ -4,7 +4,7 @@ services:
     hostname: "${HOST_NAME}"
     domainname: "${DOMAIN_NAME}"
     image: gersonlv/backend_php:laravel.v11
-    platform: linux/arm64/v8
+    platform: linux/amd64
     ports:
       - "${BACKEND_PHP_PORT:-80}:80"
     user: root
@@ -29,14 +29,14 @@ services:
       - ./docker/init/backend_php/php.ini:/usr/local/etc/php/php.ini
     networks:
       dev-docker:
-        aliases: 
+        aliases:
           - backend_php
         ipv4_address: "${BACKEND_PHP_IP}"
   sqliteadmin:
     container_name: "${PREFIX}_sqliteadmin"
     hostname: "${HOST_NAME}_sqliteadmin"
     image: gersonlv/sqliteadmin:phpliteadmin.v1.9.8
-    platform: linux/arm64/v8
+    platform: linux/amd64
     volumes:
       - sqlite_data:/db
       - phpliteadmin:/var/www/html
@@ -56,16 +56,16 @@ services:
     restart: "always"
     networks:
       dev-docker:
-        aliases: 
+        aliases:
           - phpliteadmin
         ipv4_address: "${SQLITEADMIN_IP}"
   mariadb:
     container_name: "${PREFIX}_mariadb"
     hostname: "${HOST_NAME}_mariadb"
     image: gersonlv/mariadb:mariadb.v11
-    platform: linux/arm64/v8
-    restart: "no" 
-    user: 1000:1000  
+    platform: linux/amd64
+    restart: "no"
+    user: 1000:1000
     build:
       context: ./docker/init/mariadb
       dockerfile: Dockerfile
@@ -84,24 +84,24 @@ services:
       - mariadb_data:/var/lib/mysql
     networks:
       dev-docker:
-        aliases: 
+        aliases:
           - mariadb
         ipv4_address: "${MARIADB_IP}"
   phpmyadmin:
     container_name: "${PREFIX}_phpmyadmin"
     hostname: "${HOST_NAME}_phpmyadmin"
     image: phpmyadmin
-    platform: linux/arm64/v8
+    platform: linux/amd64
     depends_on:
-      - mariadb 
+      - mariadb
     ports:
       - "${PHPMYADMIN_PORT:-82}:80"
     environment:
       PMA_HOST: mariadb
-      PMA_PORT: 3306 
+      PMA_PORT: 3306
     networks:
       dev-docker:
-        aliases: 
+        aliases:
           - phpmyadmin
         ipv4_address: "${PHPMYADMIN_IP}"
 networks:
